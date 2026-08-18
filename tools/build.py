@@ -61,6 +61,8 @@ def main():
     p.add_argument("script")
     p.add_argument("--out-dir", required=True, help="artifact directory (.blend, .glb, report)")
 
+    sub.add_parser("guards", help="run the headless export-guard tests (docs/export-guards.md)")
+
     p = sub.add_parser("review", help="render the fixed camera set + comparison sheet")
     p.add_argument("--blend", required=True)
     p.add_argument(
@@ -75,7 +77,11 @@ def main():
     p.add_argument("--attempt", type=int, required=True)
 
     args = parser.parse_args()
-    if args.cmd == "build":
+    if args.cmd == "guards":
+        code = run_bpy(
+            os.path.join(os.path.dirname(HERE), "tests", "run_guard_tests.py"), []
+        )
+    elif args.cmd == "build":
         if not os.path.exists(args.script):
             sys.exit(f"img2blend: {args.script} does not exist")
         code = run_bpy(
