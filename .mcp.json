@@ -1,0 +1,8 @@
+{
+    "mcpServers": {
+        "orboto": {
+            "type": "http",
+            "url": "https://tasks.silentfuture.de/mcp"
+        }
+    }
+}
