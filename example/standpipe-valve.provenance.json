@@ -1,0 +1,145 @@
+{
+  "schema": "img2blend/1",
+  "prop": "standpipe-valve",
+  "pipeline": "img2blend v1 (silentfuture.img2blend), methodology adapted from img2threejs (Apache-2.0)",
+  "references": [
+    {
+      "path": "refs/reference-front.jpg",
+      "view": "front",
+      "licence": "CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "source": "Photo by Luc Coekaerts from Tessenderlo, Flickr, https://www.flickr.com/photos/92947007@N03/26676317625 (crops of the valve region; found via Openverse, licence cc0 1.0)"
+    },
+    {
+      "path": "refs/reference-detail-head.jpg",
+      "view": "detail",
+      "licence": "CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)",
+      "source": "Photo by Luc Coekaerts from Tessenderlo, Flickr, https://www.flickr.com/photos/92947007@N03/26676317625 (crops of the valve region; found via Openverse, licence cc0 1.0)"
+    }
+  ],
+  "coverage": {
+    "evidenced_views": [
+      "front"
+    ],
+    "inferred_views": [
+      "side",
+      "back",
+      "three-quarter"
+    ]
+  },
+  "stated_dimension": "handwheel diameter = 0.20 m (typical DN80-DN100 rising-main gate valve; pipe read as DN100)",
+  "seed": 7,
+  "build_script": "build-standpipe-valve.py",
+  "limits": [
+    "side, back and three-quarter views uncovered - body depth inferred from gate-valve type knowledge (oval bonnet, flat across the gate plane); rear assumed mirror of front",
+    "all dimensions estimated from the stated handwheel diameter; total height ~1.0 m derived from pixel ratios",
+    "materials inferred from sunlit photo pixels - rust and bitumen read, not measured; wall shadows ignored",
+    "the photo's slight pipe lean is read as camera perspective and idealized to vertical"
+  ],
+  "gates": [
+    {
+      "pass": "blockout",
+      "attempt": 1,
+      "action": "refine-script",
+      "sheet": "review/blockout-a1-sheet.png",
+      "renders": [
+        "review/blockout-a1-front.png",
+        "review/blockout-a1-side.png",
+        "review/blockout-a1-three-quarter.png"
+      ],
+      "changed": "first blockout: full mass stack built (pipe, flange, body, bonnet flange, bonnet, gland, stem, wheel plate) at stated scale; contract enforced green",
+      "still_off": "vertical proportions wrong vs front reference: photo shows valve head (pipe flange to wheel top) at ~33 percent of total height, build spends 42 percent on it - pipe too short, head stretched; wheel plate floats too high above the gland",
+      "why": "silhouette-defining proportion error is exactly what blockout must get right; geometry constants are wrong in the script, the plan (part list, stated dimension) is sound",
+      "at": "2026-07-30T12:50:21+00:00"
+    },
+    {
+      "pass": "blockout",
+      "attempt": 2,
+      "action": "continue",
+      "sheet": "review/blockout-a2-sheet.png",
+      "renders": [
+        "review/blockout-a2-front.png",
+        "review/blockout-a2-side.png",
+        "review/blockout-a2-three-quarter.png"
+      ],
+      "changed": "Z constants recut to the photo's ratios: pipe 0 to 0.665, head compressed to top third (body 0.695-0.800, bonnet to 0.885, gland to 0.945, wheel hub 0.985); wheel dropped onto the gland",
+      "still_off": "wheel is a plate, bonnet a straight cone, no bolts/spokes/rings yet - structure and form work by design; nothing proportion-level remains off",
+      "why": "blockout criteria are mass placement and silhouette proportion in all views, and those now read against the front reference; uncovered views are self-consistent (rotational stack)",
+      "at": "2026-07-30T12:52:37+00:00"
+    },
+    {
+      "pass": "structure",
+      "attempt": 1,
+      "action": "continue",
+      "sheet": "review/structure-a1-sheet.png",
+      "renders": [
+        "review/structure-a1-front.png",
+        "review/structure-a1-side.png",
+        "review/structure-a1-three-quarter.png"
+      ],
+      "changed": "wheel is now rim + 5 spokes + hub + stem nut (joined as valve_handwheel about its hinge origin); gland is a 5-ring stack; pipe flange carries its 8 studs",
+      "still_off": "everything is straight-edged: body is a cylinder not a bulge, bonnet a cone not a dome, rim square in section - form pass work; no missing or floating part remains",
+      "why": "structure criteria are part presence, placement and articulation origins: both contract objects exist, every reference-visible sub-part is built and seated, the wheel spins about its own hub by construction",
+      "at": "2026-07-30T12:58:05+00:00"
+    },
+    {
+      "pass": "form",
+      "attempt": 1,
+      "action": "refine-script",
+      "sheet": "review/form-a1-sheet.png",
+      "renders": [
+        "review/form-a1-front.png",
+        "review/form-a1-side.png",
+        "review/form-a1-three-quarter.png"
+      ],
+      "changed": "curved profiles landed: bulged body revolve, domed bonnet, chamfered bonnet flange, round-section wheel rim, smooth shading on body and wheel",
+      "still_off": "mass distribution is inverted vs the reference: the render's dominant rounded mass is a bulbous BODY below a small flange, but the detail reference shows a short drum body, then the widest element (a DOUBLE-disc bonnet flange), then the dominant dome as the BONNET above it, narrowing into the gland",
+      "why": "the shapes exist but sit on the wrong masses - a form error in the script's profiles, not a plan error; three-quarter view makes the onion silhouette obvious",
+      "at": "2026-07-30T13:03:36+00:00"
+    },
+    {
+      "pass": "form",
+      "attempt": 2,
+      "action": "continue",
+      "sheet": "review/form-a2-sheet.png",
+      "renders": [
+        "review/form-a2-front.png",
+        "review/form-a2-side.png",
+        "review/form-a2-three-quarter.png"
+      ],
+      "changed": "mass order corrected: short waisted drum body, double-disc bonnet flange as the widest element (shadow gap between discs), dominant bonnet dome shouldering into the gland; round-sectioned rim kept",
+      "still_off": "flange studs are subtler than the photo's rust-swollen bolts; photo spokes arch slightly upward to the hub, mine are straight - recorded as accepted approximation",
+      "why": "form criteria: the three-quarter render now reads as a gate-valve head with correct curvature and edge character, not a toy; remaining deltas are surface-level, not shape-level",
+      "at": "2026-07-30T13:09:20+00:00"
+    },
+    {
+      "pass": "material",
+      "attempt": 1,
+      "action": "continue",
+      "sheet": "review/material-a1-sheet.png",
+      "renders": [
+        "review/material-a1-front.png",
+        "review/material-a1-side.png",
+        "review/material-a1-three-quarter.png"
+      ],
+      "changed": "flat blockout colours replaced: pipe = patchy bitumen with rust break-through and sparse wrap-grey remnants; head and wheel share a rust recipe (patch noise, cavity darkening, edge rub-through, roughness 0.5-0.8, near-dielectric) with the wheel one register brighter",
+      "still_off": "photo reads warmer because it is lit by direct evening sun - the review light is neutral by design; close-range mottle still flatter than the reference, surface-pass work",
+      "why": "material criteria are slot assignment, palette and PBR class per part: all three slots carry the right class (matte rust dielectric, darker tar with sheen) and the palette sits in the reference's register",
+      "at": "2026-07-30T13:17:37+00:00"
+    },
+    {
+      "pass": "surface",
+      "attempt": 1,
+      "action": "continue",
+      "sheet": "review/surface-a1-sheet.png",
+      "renders": [
+        "review/surface-a1-front.png",
+        "review/surface-a1-side.png",
+        "review/surface-a1-three-quarter.png"
+      ],
+      "changed": "rust concentration biased towards the flange end of the pipe (height-weighted band mask), broad weather stains added to the head recipe, mottle contrast raised",
+      "still_off": "the photo's flaky micro-relief cannot be reproduced: pipeline v1 bakes basecolor/roughness/metallic only, no normal/height channel - stated as a pipeline limit, not fixable in this pass; wrap-vs-rust contrast slightly softer than the photo",
+      "why": "surface criteria are the wear register at prop viewing distance, and the banded, mottled, rubbed-edge story now matches the reference in all covered views; the remaining delta needs a bump channel the pipeline does not have",
+      "at": "2026-07-30T13:27:09+00:00"
+    }
+  ]
+}

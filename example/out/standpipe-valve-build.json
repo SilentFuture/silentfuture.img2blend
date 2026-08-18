@@ -1,0 +1,151 @@
+{
+  "prop": "standpipe-valve",
+  "seed": 7,
+  "blender": "5.2.0 LTS",
+  "contract": {
+    "prop": "standpipe-valve",
+    "objects": [
+      {
+        "name": "valve_body",
+        "slots": [
+          "valve_pipe",
+          "valve_iron"
+        ],
+        "origin": "base"
+      },
+      {
+        "name": "valve_handwheel",
+        "slots": [
+          "valve_wheel"
+        ],
+        "origin": "hinge",
+        "axis": "Z",
+        "rest": "closed"
+      }
+    ],
+    "dimension": {
+      "what": "handwheel diameter",
+      "metres": 0.2,
+      "measure": "extent_xy_max:valve_handwheel",
+      "tolerance": 0.01
+    }
+  },
+  "objects": [
+    {
+      "object": "valve_body",
+      "origin": "base",
+      "axis": null,
+      "rest": null,
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "triangles": 2912,
+      "vertices": 1496,
+      "material_slots": [
+        "valve_pipe",
+        "valve_iron"
+      ],
+      "local_bounds_min": [
+        -0.105,
+        -0.105,
+        0.0
+      ],
+      "local_bounds_max": [
+        0.105,
+        0.105,
+        1.007
+      ]
+    },
+    {
+      "object": "valve_handwheel",
+      "origin": "hinge",
+      "axis": "Z",
+      "rest": "closed",
+      "location": [
+        0.0,
+        0.0,
+        0.985
+      ],
+      "triangles": 1188,
+      "vertices": 656,
+      "material_slots": [
+        "valve_wheel"
+      ],
+      "local_bounds_min": [
+        -0.1,
+        -0.1,
+        -0.016
+      ],
+      "local_bounds_max": [
+        0.1,
+        0.1,
+        0.032
+      ]
+    }
+  ],
+  "measures": {
+    "dimensions_m": [
+      0.21,
+      0.21,
+      1.017
+    ],
+    "stated_dimension": {
+      "what": "handwheel diameter",
+      "metres": 0.2,
+      "measure": "extent_xy_max:valve_handwheel",
+      "tolerance": 0.01,
+      "measured_m": 0.2
+    },
+    "size_m": 1.017
+  },
+  "bake": {
+    "resolution": 1024,
+    "coverage": {
+      "valve_pipe/basecolor": {
+        "max": 0.251,
+        "coverage": 0.2917
+      },
+      "valve_iron/basecolor": {
+        "max": 0.3922,
+        "coverage": 0.6278
+      },
+      "valve_wheel/basecolor": {
+        "max": 0.4824,
+        "coverage": 0.5202
+      },
+      "valve_pipe/roughness": {
+        "max": 0.6588,
+        "coverage": 0.2917
+      },
+      "valve_iron/roughness": {
+        "max": 0.7255,
+        "coverage": 0.6278
+      },
+      "valve_wheel/roughness": {
+        "max": 0.702,
+        "coverage": 0.5203
+      },
+      "valve_pipe/metallic": {
+        "max": 0.0,
+        "coverage": 0.0
+      },
+      "valve_iron/metallic": {
+        "max": 0.149,
+        "coverage": 0.6277
+      },
+      "valve_wheel/metallic": {
+        "max": 0.1451,
+        "coverage": 0.5202
+      }
+    }
+  },
+  "sockets": [],
+  "outputs": {
+    "blend": "standpipe-valve.blend",
+    "glb": "standpipe-valve.glb",
+    "glb_bytes": 428488,
+    "glb_embedded_images": 6
+  }
+}

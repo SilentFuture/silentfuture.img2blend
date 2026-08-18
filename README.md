@@ -13,8 +13,10 @@ own import/acceptance step.
 
 ## Requirements
 
-- Blender 4.2+ (verified with 5.2 LTS). Discovery order: `SF_BLENDER` env
-  var, the macOS app bundle (`/Applications/Blender.app`), `blender` on PATH.
+- Blender 4.2+ (the example prop builds verified end-to-end on 5.2 LTS:
+  full build incl. bakes and guarded GLB export, review renders, provenance
+  check). Discovery order: `SF_BLENDER` env var, the macOS app bundle
+  (`/Applications/Blender.app`), `blender` on PATH.
 - Python 3 for the runner and review tooling (`review.py` is pure stdlib;
   the bpy stages use Blender's bundled Python incl. numpy).
 

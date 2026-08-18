@@ -2,5 +2,5 @@
 __pycache__/
 *.blend1
 work/
-example/out/
-example/review/
+example/out/*
+!example/out/standpipe-valve-build.json
