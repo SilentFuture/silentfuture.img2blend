@@ -67,7 +67,7 @@ build FAILS rather than shipping a violation.
    the bake to textures happens after the `.blend` is saved, so what the
    operator opens is editable authoring, not a flattened husk.
 
-## 3. The five guarded export failure modes
+## 3. The six guarded export failure modes
 
 Enforced by `bakekit.export_glb` on every build (spec and headless tests:
 `docs/export-guards.md`):
@@ -85,6 +85,10 @@ Enforced by `bakekit.export_glb` on every build (spec and headless tests:
    an error, not a warning.
 5. **Selection leftovers** - export selects exactly the objects the contract
    names. Saved-file selection state is not a design decision.
+6. **Inward normals** - faces winding into their shell (mirrored transforms,
+   reversed revolves) render hollow in the engine. Corrected deterministically
+   per connected component on every contract object and in `join()`, counted
+   in the build report; anything still inward afterwards is an error.
 
 Every build writes a **build report** (`<prop>-build.json`): Blender version,
 measured dimensions, triangle counts, slot order per object, bake coverage per

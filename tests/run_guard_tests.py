@@ -140,6 +140,27 @@ def guard2_black_bake_fails():
     )
 
 
+def guard6_inward_normals_are_corrected_and_reported():
+    body, contract = minimal_prop()
+    # mirror the body: every face now winds inward, consistently
+    for v in body.data.vertices:
+        v.co.x = -v.co.x
+    body.data.update()
+    assert bakekit.count_inward_faces(body) == 6, bakekit.count_inward_faces(body)
+    facts, _ = bakekit._enforce_contract(contract, [body], [])
+    assert bakekit.count_inward_faces(body) == 0
+    assert facts[0]["inward_faces_fixed"] == 6, facts[0]
+
+
+def guard6_join_fixes_mirrored_parts():
+    body, contract = minimal_prop()
+    verts, faces = bakekit.box(0.5, 0.0, 0.0, 0.1, 0.1, 0.1)
+    mirrored = bakekit.new_obj("mirrored_part", [(-x, y, z) for x, y, z in verts], faces, body.data.materials[0])
+    joined = bakekit.join([body, mirrored], "prop_body")
+    assert bakekit.count_inward_faces(joined) == 0
+    assert bakekit.NORMALS_FIXED["prop_body"] == 6, bakekit.NORMALS_FIXED
+
+
 def guard5_clean_build_exports_exact_selection():
     body, contract = minimal_prop()
     bakekit.new_obj("decoy_helper", *bakekit.box(1.0, 1.0, 0.0, 0.1, 0.05, 0.05))
@@ -164,6 +185,8 @@ CASES = [
     contract_dimension_fails,
     guard2_black_bake_fails,
     guard5_clean_build_exports_exact_selection,
+    guard6_inward_normals_are_corrected_and_reported,
+    guard6_join_fixes_mirrored_parts,
 ]
 
 

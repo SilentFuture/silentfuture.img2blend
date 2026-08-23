@@ -19,6 +19,7 @@ import json
 import math
 import os
 
+import bmesh
 import bpy
 from mathutils import Vector
 
@@ -46,6 +47,7 @@ def reset_scene(seed):
     _SEED = int(seed)
     _NOISE_CALLS = 0
     CHAN.clear()
+    NORMALS_FIXED.clear()
     bpy.ops.wm.read_factory_settings(use_empty=True)
     scene = bpy.context.scene
     scene.render.engine = "CYCLES"
@@ -179,7 +181,9 @@ def cyl(cx, cy, z0, z1, r, seg=48, taper=None):
 
 
 def join(objects, name):
-    """Join static parts into one named object (contract rule 1)."""
+    """Join static parts into one named object (contract rule 1). Face
+    windings are made consistent and outward on the result (Guard 6), so
+    the .blend the operator opens is already right."""
     bpy.ops.object.select_all(action="DESELECT")
     for ob in objects:
         ob.select_set(True)
@@ -188,7 +192,45 @@ def join(objects, name):
     bpy.ops.object.join()
     joined = bpy.context.view_layer.objects.active
     joined.name = name
+    fix_normals(joined)
     return joined
+
+
+# Guard 6 bookkeeping: inward faces corrected per object, reported in the
+# build report so a script author sees which parts were authored mirrored
+NORMALS_FIXED = {}
+
+
+def count_inward_faces(obj):
+    """Faces whose winding points into their shell. Recomputed per connected
+    component on a scratch bmesh, so a whole mirrored box (consistently
+    inside out) is caught as well as a single flipped face."""
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.normal_update()
+    before = [f.normal.copy() for f in bm.faces]
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    bm.normal_update()
+    inward = sum(1 for f, n in zip(bm.faces, before) if f.normal.dot(n) < 0.0)
+    bm.free()
+    return inward
+
+
+def fix_normals(obj):
+    """Guard 6: make every face wind outward. A box placed with a mirrored
+    (left-handed) transform or a profile revolved the wrong way round
+    renders inside out in the engine - back faces culled, the part invisible
+    or hollow. Returns the number of faces corrected."""
+    inward = count_inward_faces(obj)
+    if inward:
+        bm = bmesh.new()
+        bm.from_mesh(obj.data)
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bm.to_mesh(obj.data)
+        bm.free()
+        obj.data.update()
+    NORMALS_FIXED[obj.name] = NORMALS_FIXED.get(obj.name, 0) + inward
+    return inward
 
 
 def shade_smooth(obj, angle_deg=35):
@@ -389,11 +431,22 @@ def _enforce_contract(contract, objects, empties):
                 fail(f"material slot {s!r} appears on two objects - slot names must be unique")
             slot_names.append(s)
 
+        # Guard 6: inward-facing normals. Corrected here rather than
+        # refused - the fix is deterministic - but counted and reported, and
+        # anything still inward afterwards (non-manifold shells) is an error.
+        fixed = fix_normals(obj)
+        if fixed:
+            print(f"bakekit: {obj.name}: {fixed} inward faces corrected (Guard 6) - check the script's transforms")
+        leftover = count_inward_faces(obj)
+        if leftover:
+            fail(f"{obj.name} still has {leftover} inward-facing faces after correction - the mesh is not a closed shell")
+
         mesh = obj.data
         local = [Vector(c) for c in obj.bound_box]
         facts.append(
             {
                 "object": obj.name,
+                "inward_faces_fixed": NORMALS_FIXED.get(obj.name, 0),
                 "origin": entry.get("origin", "assembled"),
                 "axis": entry.get("axis"),
                 "rest": entry.get("rest"),

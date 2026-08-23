@@ -68,3 +68,23 @@ selects exactly the contract objects plus declared sockets.
 **Where:** `finish_build` before `export_scene.gltf(use_selection=True)`.
 **Test:** `guard5_clean_build_exports_exact_selection` - a decoy object in
 the scene must not appear among the glb's nodes.
+
+## 6. Inward normals
+
+**What it catches:** faces winding into their shell - a box placed with a
+mirrored (left-handed) transform, a profile revolved the wrong way round.
+The engine culls back faces, so the part renders hollow or invisible. The
+fix is deterministic, so the guard corrects rather than refuses: every
+contract object gets `recalc_face_normals` per connected component, the
+count of corrected faces lands in the build report (`inward_faces_fixed`)
+and on stdout so the script author sees which transforms were mirrored.
+Anything still inward after the correction (a non-manifold shell) is an
+error. `join()` applies the same correction, so the saved `.blend` is
+right before the bake.
+
+**Where:** `fix_normals` / `count_inward_faces`, called from `join` and from
+`_enforce_contract`.
+**Test:** `guard6_inward_normals_are_corrected_and_reported` (a mirrored
+body: 6 inward faces counted, corrected, reported) and
+`guard6_join_fixes_mirrored_parts` (a mirrored part joined into the body
+comes out consistent).
