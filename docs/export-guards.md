@@ -1,4 +1,4 @@
-# The five guarded export failure modes
+# The six guarded export failure modes
 
 Enforced by `bakekit` on every build - the build FAILS (`bakekit: FAILED -
 <message>`, exit code 1) rather than shipping a violation. The discipline
