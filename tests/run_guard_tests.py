@@ -152,6 +152,14 @@ def guard6_inward_normals_are_corrected_and_reported():
     assert facts[0]["inward_faces_fixed"] == 6, facts[0]
 
 
+def guard6_revolve_about_y_winds_outward():
+    bakekit.reset_scene(7)
+    for axis in ("Z", "Y"):
+        v, f = bakekit.revolve([(0.2, -0.1), (0.2, 0.1)], seg=8, axis=axis, close_start=True, close_end=True)
+        ob = bakekit.new_obj(f"rev_{axis}", v, f)
+        assert bakekit.count_inward_faces(ob) == 0, (axis, bakekit.count_inward_faces(ob))
+
+
 def guard6_join_fixes_mirrored_parts():
     body, contract = minimal_prop()
     verts, faces = bakekit.box(0.5, 0.0, 0.0, 0.1, 0.1, 0.1)
@@ -187,6 +195,7 @@ CASES = [
     guard5_clean_build_exports_exact_selection,
     guard6_inward_normals_are_corrected_and_reported,
     guard6_join_fixes_mirrored_parts,
+    guard6_revolve_about_y_winds_outward,
 ]
 
 

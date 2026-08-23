@@ -88,8 +88,9 @@ def revolve(profile, seg=64, axis="Z", close_start=False, close_end=False):
         for r, h in profile:
             if axis == "Z":
                 verts.append(Vector((r * ca, r * sa, h)))
-            else:  # "Y"
-                verts.append(Vector((r * ca, h, r * sa)))
+            else:  # "Y": cyclic permutation (z, x, y) keeps the winding
+                # outward - (x, h, z) mirrored every face inward (Guard 6)
+                verts.append(Vector((r * sa, h, r * ca)))
     for i in range(seg):
         j = (i + 1) % seg
         for k in range(n - 1):
